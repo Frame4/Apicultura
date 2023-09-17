@@ -1,6 +1,8 @@
 package GUI;
 
 import javax.swing.*;
+
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,29 +11,49 @@ import java.awt.event.ActionListener;
 public class weatherUI {
     String currentWeather="";
     JPanel wPanel;
-    JButton backBTN;
+    JButton addBHiveBTN;
+    JComboBox<String> selectHive ;
     JFrame frame;
+    JTextArea beeEventTA;
+    JLabel roomStatusLabel;
+    JLabel currentWeatherLabel;
     public JPanel weatherJPanel(){
         frame = new JFrame();
-        frame.setSize(500, 600);
+        frame.setSize(900, 600);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel wPanel = new JPanel();
+
+        wPanel = new JPanel();
         frame.add(wPanel);
-        JLabel currentWeatherLabel = new JLabel("Current weather: "+currentWeather);
-        wPanel.add(currentWeatherLabel);
+        
+        roomStatusLabel = new JLabel("Room Status:");
+        roomStatusLabel.setBounds(20, 30, 200, 200);
+        //wPanel.add(roomStatusLabel);
+        
+        currentWeatherLabel = new JLabel("Current weather: "+currentWeather);
+        currentWeatherLabel.setBounds(20, 20, 200, 200);
+        //wPanel.add(currentWeatherLabel);
+        
+        beeEventTA = new JTextArea();
+        beeEventTA.setBounds(10, 10, 300, 540);
+        
+        wPanel.add(beeEventTA);
 
+        selectHive = new JComboBox<String>();
+        selectHive.setBounds(500, 450, 0, 0);
+        selectHive.addItem("hive 1");
 
-        backBTN = new JButton("");
-        backBTN.setBounds(175, 250, 150, 30);
-        //backBTN.setBackground(Color.WHITE);
-        backBTN.addActionListener(new ActionListener() {
+        wPanel.add(selectHive);
+        addBHiveBTN = new JButton("Add bee Hive");
+        addBHiveBTN.setBounds(500, 500, 150, 30);
+        addBHiveBTN.setBackground(Color.WHITE);
+        addBHiveBTN.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
 
             }
         });
-        wPanel.add(backBTN);
+        wPanel.add(addBHiveBTN);
 
 
         return wPanel;
