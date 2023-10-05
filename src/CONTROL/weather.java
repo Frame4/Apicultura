@@ -4,67 +4,59 @@ import java.lang.Math;
 
 public class weather {
     private String currentWeather;
-    protected int temperature;
+    private int temperature;
 
     public String getCurrentWeather() {
         return currentWeather;
     }
 
-    public void setCurrentWeather(String currentWeather) {
-        this.currentWeather = currentWeather;
-    }
+
 
     public int getTemperature() {
         return temperature;
     }
 
-    public int sunny(){
+    public void sunny(){
         int max = 35;
         int min = 20;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
-        setCurrentWeather("sunny");
-        return temperature;
+        currentWeather=("sunny");
     }
-    public int rainy(){
+    public void rainy(){
         int max = 25;
         int min = 10;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
-        setCurrentWeather("rainy");
-        return temperature;
+        currentWeather=("rainy");
     }
-    public int stormy(){
+    public void stormy(){
         int max = 30;
         int min = 15;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
-        setCurrentWeather("stormy");
-        return temperature;
+        currentWeather=("stormy");
     }
-    public int windy(){
+    public void windy(){
         int max = 5;
         int min = -15;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
-        setCurrentWeather("windy");
-        return temperature;
+        currentWeather=("windy");
     }
-    public int cloudy(){
+    public void cloudy(){
         int max = 25;
         int min = 15;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
-        setCurrentWeather("cloudy");
-        return temperature;
+        currentWeather=("cloudy");
     }
-    public int snowy(){
+    public void snowy(){
         int max = -35;
         int min = -5;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
-        setCurrentWeather("snowy");
-        return temperature;
+        currentWeather=("snowy");
     }
 }
 

@@ -1,14 +1,18 @@
 package LOGIC;
+
+import CONTROL.weatherControl;
 import GUI.*;
-import CONTROL.*;
+
 public class Main {
     public static void main(String[] args) {
-        beeInterface bI = new beeInterface();
-        weatherUI wUI = new weatherUI();
-        //bI.beeMenu();
-        //wUI.weatherJPanel();
+        beeMenuUI bM = new beeMenuUI();
+        beeCareUI wUI = new beeCareUI();
+        //bM.beeMenu();
         weatherControl weatherControl = new weatherControl();
-        weatherControl.startWeather();
+        //weatherControl.startWeather();
+        wUI.weatherJPanel();
+
+
 
 
         

@@ -14,37 +14,44 @@ public class weatherControl extends Thread{
 
 
     public void startWeather(){
-        weather.sunny();
         start();
     }
+
+    public String getWeather(){
+        System.out.println(weather.getCurrentWeather());
+        return weather.getCurrentWeather();
+    }
+    public int getTemperature(){
+        System.out.println(weather.getTemperature());
+        return weather.getTemperature();
+    }
+
+
 
     public void weatherRandomizer(){
 
         int randomNumber = random.nextInt(8);
-        switch (randomNumber) {// de esta manera no va a pasar de estar soleado a nevar de la nada. los cambios climaticos tienen sentido.
+        switch (randomNumber) {// de esta manera no va a pasar de estar soleado a nevar de la nada. Los cambios climáticos tienen sentido.
             case 0:
-                weather.sunny();
-                break;
-            case 1:
                 if (weather.getCurrentWeather().equals("cloudy")) {
                     weather.rainy();
                 }else
                     weather.cloudy();
 
                 break;
-            case 2:
+            case 1:
                 if (weather.getCurrentWeather().equals("rainy") || weather.getCurrentWeather().equals("windy")) {
                     weather.stormy();
                 }else
                     weather.rainy();
                 break;
-            case 3:
+            case 2:
                 weather.windy();
                 break;
-            case 4:
+            case 3:
                 weather.cloudy();
                 break;
-            case 5:
+            case 4:
                 if (weather.getCurrentWeather().equals("rainy") || weather.getCurrentWeather().equals("stormy") || weather.getCurrentWeather().equals("windy")) {
                     weather.snowy();
                 }
@@ -53,6 +60,7 @@ public class weatherControl extends Thread{
                 weather.sunny();
         }
         System.out.println(weather.getCurrentWeather());
+
 
     }
 
