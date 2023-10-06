@@ -4,32 +4,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import CONTROL.weather;
-import CONTROL.weatherControl;
+import CONTROL.*;
+import LOGIC.*;
 
 
 public class beeCareUI {
-    weather weather = new weather();
-    CONTROL.weatherControl weatherControl = new weatherControl();
+    weather weather = LOGIC.weather.getInstance();
+    aCControl ac = aCControl.getInstance();
+    lightsControl lc = lightsControl.getInstance();
+    smokeControl sc = smokeControl.getInstance();
+    weatherControl wc = new weatherControl();
+    farmControl fc = new farmControl();
+    Main main = new Main();
+    Farm currentFarm = main.testFarm;
 
     JFrame mainBeeCareFrame;
     JPanel mainPanel,leftPanel,centerPanel, infoPanel;
     JTextArea beeEventTA;
-
-    JLabel currentWeatherLabel,currentTemperatureLabel,smokeInRoom,beeConformityLevelLabel;
-    JLabel beeCountLabel;
-    JLabel lightLevelLabel;
-    JButton increaseLightButton,decreaseLightButton;
-    JLabel aCCapacitylLabel;
-    JButton increaseTempButton,decreaseTempButton;
-    JButton useSmokerButton;
-    JComboBox<String> selectBeehive; //cambiar string a objBeeHive;
-    JButton selectBeeHiveButton;
+    JLabel currentWeatherLabel,currentTemperatureLabel,smokeInRoom,beeConformityLevelLabel,beeCountLabel,lightLevelLabel,aCCapacitylLabel;
+    JButton increaseLightButton,decreaseLightButton,increaseTempButton,decreaseTempButton,useSmokerButton, GatesButton, harvestButton;
 
 
-    //colors
-    Color skyBlue = new Color(173,216,230);
+
 
     public void weatherJPanel(){
 
@@ -37,7 +33,6 @@ public class beeCareUI {
         mainBeeCareFrame.setSize(900,600);
         mainBeeCareFrame.setVisible(true);
         mainBeeCareFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainBeeCareFrame.setBackground(skyBlue);
 
         Image icon = Toolkit.getDefaultToolkit().getImage("resources/fullBeeHive.png");
         mainBeeCareFrame.setIconImage(icon);
@@ -58,13 +53,26 @@ public class beeCareUI {
         lPGridBag.gridx = 0;       //aligned with button 2
         lPGridBag.gridwidth = 1;   //2 columns wide
         lPGridBag.gridy = 0;
-        leftPanel.add(new JLabel("Hive Control"),lPGridBag);
+        leftPanel.add(new JLabel("Farm Control"),lPGridBag);
 
 
         //combobox
-        selectBeehive = new JComboBox<String>();
-        selectBeehive.addItem("hive 1");
-        selectBeehive.setBackground(Color.white);
+        GatesButton = new JButton("open gates");
+        GatesButton.setBackground(Color.white);
+        GatesButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                if(GatesButton.getText().equals("open gates")) {//if gates are now open
+                    GatesButton.setText("close gates");
+                    fc.pollinate(main.testFarm);
+
+                }
+                else {//if gates are now closed
+                    GatesButton.setText("open gates");
+                }
+            }
+        });
+
+
         lPGridBag.fill = GridBagConstraints.HORIZONTAL;
         lPGridBag.ipady = 5;
         lPGridBag.ipadx = 5;
@@ -73,18 +81,19 @@ public class beeCareUI {
         lPGridBag.gridx = 0;       //aligned with button 2
         lPGridBag.gridwidth = 1;   //2 columns wide
         lPGridBag.gridy = 1;       //third row
-        leftPanel.add(selectBeehive, lPGridBag);
+        leftPanel.add(GatesButton, lPGridBag);
 
         //select hive button
-        selectBeeHiveButton = new JButton("select hive");
-        selectBeeHiveButton.setBackground(Color.WHITE);
-        selectBeeHiveButton.setFocusPainted(false);
-
-        selectBeeHiveButton.addActionListener(new ActionListener() {
+        harvestButton = new JButton("harvest hives");
+        harvestButton.setBackground(Color.WHITE);
+        harvestButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-
+                fc.harvest(main.testFarm);
             }
-        });//getHive; print hiveInfo en el textArea
+        });
+
+
+        //getHive; print hiveInfo en el textArea
 
         lPGridBag.fill = GridBagConstraints.HORIZONTAL;
         lPGridBag.weighty = 1.0;   //request any extra vertical space
@@ -93,7 +102,7 @@ public class beeCareUI {
         lPGridBag.gridx = 5;       //aligned with button 2
         lPGridBag.gridwidth = 2;   //2 columns wide
         lPGridBag.gridy = 1;       //third row
-        leftPanel.add(selectBeeHiveButton, lPGridBag);
+        leftPanel.add(harvestButton, lPGridBag);
 
         //lPGridBag.fill = GridBagConstraints.HORIZONTAL;
         lPGridBag.weighty = 1.0;   //request any extra vertical space
@@ -115,6 +124,15 @@ public class beeCareUI {
         lPGridBag.gridy = 3;
 
         decreaseLightButton = new JButton("- light");
+        decreaseLightButton.setBackground(Color.WHITE);
+        decreaseLightButton.setFocusPainted(false);
+
+        decreaseLightButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                lc.decreaseLight();
+                main.displayInfo();
+            }
+        });
         leftPanel.add(decreaseLightButton, lPGridBag);
 
         lPGridBag.weighty = 1.0;   //request any extra vertical space
@@ -125,6 +143,15 @@ public class beeCareUI {
         lPGridBag.gridy = 3;
 
         increaseLightButton = new JButton("+ light");
+        increaseLightButton.setBackground(Color.WHITE);
+        increaseLightButton.setFocusPainted(false);
+
+        increaseLightButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                lc.increaseLight();
+                main.displayInfo();
+            }
+        });
         leftPanel.add(increaseLightButton,lPGridBag);
 
 
@@ -146,6 +173,15 @@ public class beeCareUI {
         lPGridBag.gridy = 5;
 
         decreaseTempButton = new JButton("- temperature");
+        decreaseTempButton.setBackground(Color.WHITE);
+        decreaseTempButton.setFocusPainted(false);
+
+        decreaseTempButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                ac.decreaseTemperature();
+                main.displayInfo();
+            }
+        });
         leftPanel.add(decreaseTempButton, lPGridBag);
 
         lPGridBag.weighty = 1.0;   //request any extra vertical space
@@ -156,6 +192,15 @@ public class beeCareUI {
         lPGridBag.gridy = 5;
 
         increaseTempButton = new JButton("+ temperature");
+        increaseTempButton.setBackground(Color.WHITE);
+        increaseTempButton.setFocusPainted(false);
+
+        increaseTempButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                ac.increaseTemperature();
+                main.displayInfo();
+            }
+        });
         leftPanel.add(increaseTempButton,lPGridBag);
 
         lPGridBag.weighty = 1.0;   //request any extra vertical space
@@ -175,9 +220,18 @@ public class beeCareUI {
         lPGridBag.gridy = 7;
 
         useSmokerButton = new JButton("use smoker");
+        useSmokerButton.setBackground(Color.WHITE);
+        useSmokerButton.setFocusPainted(false);
+
+        useSmokerButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                sc.smokeBees();
+                main.displayInfo();
+            }
+        });
         leftPanel.add(useSmokerButton, lPGridBag);
 
-        leftPanel.setBackground(skyBlue);
+
 
         //left panel
         //====================================================================================
@@ -188,11 +242,11 @@ public class beeCareUI {
         infoPanel = new JPanel();
 
         infoPanel.add(new Label("---farm info---"));
-        currentWeatherLabel = new JLabel("Current Weather: " + weatherControl.getWeather());
-        currentTemperatureLabel = new JLabel("Current Temperature: " + weatherControl.getTemperature() + "C°");
-        smokeInRoom = new JLabel("Smoke in the room: ");
-        lightLevelLabel = new JLabel("Light level: ");
-        aCCapacitylLabel = new JLabel("A/C Capacity: ");//off-min-mid-max
+        currentWeatherLabel = new JLabel("Current Weather: " + wc.getWeather());
+        currentTemperatureLabel = new JLabel("Current Temperature: " + wc.getTemperature() + "C°");
+        smokeInRoom = new JLabel("Smoke in room: " + sc.isSmokeInRoom());
+        lightLevelLabel = new JLabel("Light level: " + lc.getPower());
+        aCCapacitylLabel = new JLabel("A/C Capacity: " + ac.getCapacity());
         beeConformityLevelLabel = new JLabel("Bee conformity(0/100): ");
 
         infoPanel.add(currentWeatherLabel);
@@ -200,16 +254,17 @@ public class beeCareUI {
         infoPanel.add(smokeInRoom);
         infoPanel.add(lightLevelLabel);
         infoPanel.add(aCCapacitylLabel);
-        infoPanel.add(beeConformityLevelLabel);
-
-        infoPanel.add(new JLabel("---hive status---"));
+        //infoPanel.add(beeConformityLevelLabel);
+/*
         beeCountLabel = new JLabel("Bee count: ");
         infoPanel.add(beeCountLabel);
+
+ */
 
 
 
         centerPanel.add(infoPanel);
-        centerPanel.setBackground(skyBlue);
+
 
 
         //center panel
@@ -219,16 +274,18 @@ public class beeCareUI {
         mainPanel.add(leftPanel);
         mainPanel.add(centerPanel);
         beeEventTA = new JTextArea();
+        String farmInfo = "each bee hive info here";
+        beeEventTA.setText(farmInfo);
 
         beeEventTA.setBackground(Color.darkGray);
         beeEventTA.setForeground(Color.green);
+        beeEventTA.setEditable(false);
 
         JScrollPane eventLog = new JScrollPane(beeEventTA);
         mainPanel.add(eventLog);
 
 
         mainBeeCareFrame.add(mainPanel);
-
         mainBeeCareFrame.setVisible(true);
 
 

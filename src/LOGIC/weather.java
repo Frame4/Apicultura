@@ -1,30 +1,58 @@
-package CONTROL;
+package LOGIC;
 
 import java.lang.Math;
 
 public class weather {
+
+    //singleton pattern
+    private static volatile weather instance;
+    private weather() {}
+    public static weather getInstance(){
+        weather result = instance;
+        if(result==null)
+            synchronized (weather.class) {
+                result=instance;
+                if (result == null)
+                    instance = result = new weather();
+            }
+        return instance;
+    }
+
+
+
+    //============================================================
     private String currentWeather;
+
+
+
     private int temperature;
 
     public String getCurrentWeather() {
         return currentWeather;
     }
-
-
-
     public int getTemperature() {
         return temperature;
     }
+    public void setTemperature(int temperature) {
+        this.temperature = temperature;
+    }
 
+    public void heatWave(){
+        int max = 50;
+        int min = 35;
+        int range = max - min + 1;
+        temperature = (int)(Math.random() * range) + min;
+        currentWeather=("heat wave");
+    }
     public void sunny(){
-        int max = 35;
-        int min = 20;
+        int max = 40;
+        int min = 30;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
         currentWeather=("sunny");
     }
     public void rainy(){
-        int max = 25;
+        int max = 30;
         int min = 10;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
@@ -38,8 +66,8 @@ public class weather {
         currentWeather=("stormy");
     }
     public void windy(){
-        int max = 5;
-        int min = -15;
+        int max = 10;
+        int min = -5;
         int range = max - min + 1;
         temperature = (int)(Math.random() * range) + min;
         currentWeather=("windy");

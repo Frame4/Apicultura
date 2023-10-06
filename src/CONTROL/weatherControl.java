@@ -1,48 +1,41 @@
 package CONTROL;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import LOGIC.weather;
+
 import java.util.Random;
 
-public class weatherControl extends Thread{
-    weather weather = new weather();
+public class weatherControl{
+
     Random random = new Random();
+    aCControl ac = aCControl.getInstance();
 
-    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-
-
-    public void startWeather(){
-        start();
-    }
 
     public String getWeather(){
-        System.out.println(weather.getCurrentWeather());
+        weather weather = LOGIC.weather.getInstance();
         return weather.getCurrentWeather();
     }
     public int getTemperature(){
-        System.out.println(weather.getTemperature());
+        weather weather = LOGIC.weather.getInstance();
         return weather.getTemperature();
     }
 
 
-
     public void weatherRandomizer(){
+        weather weather = LOGIC.weather.getInstance();
 
-        int randomNumber = random.nextInt(8);
+        int randomNumber = random.nextInt(9);
         switch (randomNumber) {// de esta manera no va a pasar de estar soleado a nevar de la nada. Los cambios climáticos tienen sentido.
             case 0:
-                if (weather.getCurrentWeather().equals("cloudy")) {
+                if (weather.getCurrentWeather().equals("cloudy"))
                     weather.rainy();
-                }else
+                else
                     weather.cloudy();
 
                 break;
             case 1:
-                if (weather.getCurrentWeather().equals("rainy") || weather.getCurrentWeather().equals("windy")) {
+                if (weather.getCurrentWeather().equals("rainy") || weather.getCurrentWeather().equals("windy"))
                     weather.stormy();
-                }else
+                else
                     weather.rainy();
                 break;
             case 2:
@@ -52,20 +45,18 @@ public class weatherControl extends Thread{
                 weather.cloudy();
                 break;
             case 4:
-                if (weather.getCurrentWeather().equals("rainy") || weather.getCurrentWeather().equals("stormy") || weather.getCurrentWeather().equals("windy")) {
+                if (weather.getCurrentWeather().equals("rainy") || weather.getCurrentWeather().equals("stormy") || weather.getCurrentWeather().equals("windy"))
                     weather.snowy();
-                }
+
+                break;
+            case 5:
+                if(weather.getCurrentWeather().equals("sunny"))
+                    weather.heatWave();
                 break;
             default:
                 weather.sunny();
         }
-        System.out.println(weather.getCurrentWeather());
-
-
-    }
-
-    public void run(){
-        scheduler.scheduleAtFixedRate(this::weatherRandomizer, 0, 1, TimeUnit.SECONDS);// debe estar en 1 o 2 minutos pero con 5 segundos se ve más rapido.
+        ac.setCapacity("mid");
     }
 
 
