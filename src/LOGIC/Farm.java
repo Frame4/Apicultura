@@ -1,21 +1,23 @@
 package LOGIC;
 
+import java.util.ArrayList;
+
 public class Farm {
-    private Hive[] hives;
+    private ArrayList<Hive> hives;//pasar a un vector/arraylist
     private int conformity;
     private int honeyPotsProduced;
 
-    public Farm(Hive[] hives) {
-        this.hives = hives;
+    public Farm(ArrayList<Hive> hives) {
+        this.hives = new ArrayList<Hive>();
         this.conformity = 100;
         this.honeyPotsProduced = 0;
     }
 
-    public Hive[] getHives() {
+    public ArrayList<Hive> getHives() {
         return hives;
     }
 
-    public void setHives(Hive[] hives) {
+    public void setHives(ArrayList<Hive> hives) {
         this.hives = hives;
     }
 

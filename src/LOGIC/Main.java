@@ -3,20 +3,21 @@ package LOGIC;
 import CONTROL.*;
 import GUI.*;
 
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
+//hacer el programa reactivo a los comportamientos
+//
 public class Main extends Thread{
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
     farmControl fc = new farmControl();
     aCControl ac = aCControl.getInstance();
     weather weather = LOGIC.weather.getInstance();
     lightsControl lc = lightsControl.getInstance();
     smokeControl sc = smokeControl.getInstance();
-    public Farm testFarm = fc.createFarm(5);//granja de pruebas. Será reemplazada por un json donde se cargaran o se guardaran nuevas
+    public Farm testFarm = fc.createFarm();//Granja de pruebas. Será reemplazada por un json donde se cargaran o se guardaran nuevas
 
     public static void main(String[] args)  {
         Main thread = new Main();
@@ -24,6 +25,13 @@ public class Main extends Thread{
         beeCareUI wUI = new beeCareUI();
         wUI.weatherJPanel();
     }
+
+    public void pruebas(){
+        testFarm = fc.addHives(testFarm);
+        testFarm = fc.addHives(testFarm);
+        testFarm = fc.addHives(testFarm);
+    }
+
     public void displayInfo(){//información temporal. Será reemplazada en interfaz gráfica.
 
 

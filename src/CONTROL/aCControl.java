@@ -1,27 +1,17 @@
 package CONTROL;
 
 import LOGIC.weather;
+import LOGIC.readJSON;
 
 public class aCControl {
 
+    smokeControl sc = smokeControl.getInstance();
+    readJSON rjson = new readJSON();
 
     private static volatile aCControl instance;
     private aCControl() {}
-    public static aCControl getInstance(){
-        aCControl result = instance;
-        if(result==null)
-            synchronized (aCControl.class) {
-                result=instance;
-                if (result == null)
-                    instance = result = new aCControl();
-            }
-        return instance;
-    }
-    //singleton pattern
-
-
+    
     private String capacity="mid";
-
     public String getCapacity() {
         return capacity;
     }
@@ -30,8 +20,7 @@ public class aCControl {
         this.capacity = capacity;
     }
 
-
-    smokeControl sc = smokeControl.getInstance();
+    int tempChange = rjson.getConfig("aCControl","tempChange");
     public void decreaseTemperature(){
         weather weather = LOGIC.weather.getInstance();
         if(capacity.equals("max"))
@@ -42,11 +31,11 @@ public class aCControl {
             setCapacity("mid-low");
         else if(capacity.equals("mid-low")) {
             setCapacity("min");
-            weather.setTemperature(weather.getTemperature()-15);
+            weather.setTemperature(weather.getTemperature()-tempChange);
             sc.setSmokeInRoom(false);//ac at min dissipates smoke
         }
         if (!capacity.equals("min"))
-            weather.setTemperature(weather.getTemperature()-15);
+            weather.setTemperature(weather.getTemperature()-tempChange);
     }
     public void increaseTemperature(){
         weather weather = LOGIC.weather.getInstance();
@@ -58,11 +47,22 @@ public class aCControl {
             setCapacity("mid-high");
         else if(capacity.equals("mid-high")) {
             setCapacity("max");
-            weather.setTemperature(weather.getTemperature()+15);
+            weather.setTemperature(weather.getTemperature()+tempChange);
             sc.setSmokeInRoom(false);//ac at max dissipates smoke
         }
         if(!capacity.equals("max"))
-            weather.setTemperature(weather.getTemperature()+15);
+            weather.setTemperature(weather.getTemperature()+tempChange);
+    }
+
+    public static aCControl getInstance(){
+        aCControl result = instance;
+        if(result==null)
+            synchronized (aCControl.class) {
+                result=instance;
+                if (result == null)
+                    instance = result = new aCControl();
+            }
+        return instance;
     }
 
 }

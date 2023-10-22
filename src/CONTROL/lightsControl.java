@@ -3,20 +3,10 @@ package CONTROL;
 import LOGIC.weather;
 
 public class lightsControl {
+
     private static volatile lightsControl instance;
     private lightsControl() {}
-    public static lightsControl getInstance(){
-        lightsControl result = instance;
-        if(result==null)
-            synchronized (lightsControl.class) {
-                result=instance;
-                if (result == null)
-                    instance = result = new lightsControl();
-            }
-        return instance;
-    }
-    //singleton pattern
-
+    
     private String capacity="mid";
     private int power=3;
 
@@ -77,4 +67,16 @@ public class lightsControl {
             }
         }
     }
+
+    public static lightsControl getInstance(){
+        lightsControl result = instance;
+        if(result==null)
+            synchronized (lightsControl.class) {
+                result=instance;
+                if (result == null)
+                    instance = result = new lightsControl();
+            }
+        return instance;
+    }
+   
 }

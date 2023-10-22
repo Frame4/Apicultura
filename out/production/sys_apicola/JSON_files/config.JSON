@@ -1,0 +1,29 @@
+{
+  "farmConfig": {
+    "minBeeAdding": 10000,
+    "maxBeeAdding": 25000,
+    "heavyImpactMax": 70,
+    "heavyImpactMin": 30,
+    "lightImpactMax": 30,
+    "lightImpactMin": 10
+  },
+  "weatherConfig": {
+    "heatWaveMax": 50,
+    "heatWaveMin": 30,
+    "sunnyMax": 40,
+    "sunnyMin": 30,
+    "rainyMax": 30,
+    "rainyMin": 10,
+    "stormyMax": 30,
+    "stormyMin": 15,
+    "windyMax": 10,
+    "windyMin": -5,
+    "cloudyMax": 25,
+    "cloudyMin": 15,
+    "snowyMax": -35,
+    "snowyMin": -5
+  },
+  "aCControl":{
+    "tempChange": 15
+  }
+}
