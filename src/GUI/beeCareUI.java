@@ -1,36 +1,39 @@
 package GUI;
 
+import CONTROL.*;
+import LOGIC.Farm;
+import LOGIC.Main;
+import LOGIC.readJSON;
+import LOGIC.writeJSON;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import CONTROL.*;
-import LOGIC.*;
 
 
 public class beeCareUI {
-    weather weather = LOGIC.weather.getInstance();
+    readJSON rj = new readJSON();
+    writeJSON wj = new writeJSON();
     aCControl ac = aCControl.getInstance();
     lightsControl lc = lightsControl.getInstance();
     smokeControl sc = smokeControl.getInstance();
     weatherControl wc = new weatherControl();
     farmControl fc = new farmControl();
     Main main = new Main();
-    Farm currentFarm = main.testFarm;
-
     JFrame mainBeeCareFrame;
     JPanel mainPanel,leftPanel,centerPanel, infoPanel;
     JTextArea beeEventTA;
     JLabel currentWeatherLabel,currentTemperatureLabel,smokeInRoom,beeConformityLevelLabel,beeCountLabel,lightLevelLabel,aCCapacitylLabel;
-    JButton increaseLightButton,decreaseLightButton,increaseTempButton,decreaseTempButton,useSmokerButton, GatesButton, harvestButton;
+    JButton increaseLightButton,decreaseLightButton,increaseTempButton,decreaseTempButton,useSmokerButton, GatesButton, harvestButton, reloadButton, newHiveButton,loadFarm, saveFarm;
+
+    Farm currentFarm = main.mainFarm;
 
 
-
-
-    public void weatherJPanel(){
+    public void farmControlWindow(){
 
         mainBeeCareFrame = new JFrame("bee Care");
-        mainBeeCareFrame.setSize(900,600);
+        mainBeeCareFrame.setSize(1000,600);
         mainBeeCareFrame.setVisible(true);
         mainBeeCareFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -63,7 +66,7 @@ public class beeCareUI {
             public void actionPerformed(ActionEvent event) {
                 if(GatesButton.getText().equals("open gates")) {//if gates are now open
                     GatesButton.setText("close gates");
-                    fc.pollinate(main.testFarm);
+                    fc.pollinate(currentFarm);
 
                 }
                 else {//if gates are now closed
@@ -88,7 +91,7 @@ public class beeCareUI {
         harvestButton.setBackground(Color.WHITE);
         harvestButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-                fc.harvest(main.testFarm);
+                fc.harvest(currentFarm);
             }
         });
 
@@ -241,31 +244,65 @@ public class beeCareUI {
         centerPanel = new JPanel(new GridLayout(0,2));
         infoPanel = new JPanel();
 
-        infoPanel.add(new Label("---farm info---"));
+        infoPanel.add(new Label("---farm stauts---"));
         currentWeatherLabel = new JLabel("Current Weather: " + wc.getWeather());
-        currentTemperatureLabel = new JLabel("Current Temperature: " + wc.getTemperature() + "C°");
+        currentTemperatureLabel = new JLabel("Current Temp: " + wc.getTemperature() + "C°");
         smokeInRoom = new JLabel("Smoke in room: " + sc.isSmokeInRoom());
         lightLevelLabel = new JLabel("Light level: " + lc.getPower());
         aCCapacitylLabel = new JLabel("A/C Capacity: " + ac.getCapacity());
-        beeConformityLevelLabel = new JLabel("Bee conformity(0/100): ");
+        beeConformityLevelLabel = new JLabel("Conformity(0/100): " );
 
         infoPanel.add(currentWeatherLabel);
         infoPanel.add(currentTemperatureLabel);
         infoPanel.add(smokeInRoom);
         infoPanel.add(lightLevelLabel);
         infoPanel.add(aCCapacitylLabel);
-        //infoPanel.add(beeConformityLevelLabel);
-/*
-        beeCountLabel = new JLabel("Bee count: ");
-        infoPanel.add(beeCountLabel);
+        infoPanel.add(beeConformityLevelLabel);
 
- */
+        reloadButton = new JButton("reload");
+        reloadButton.setBackground(Color.WHITE);
+        reloadButton.setFocusPainted(false);
+        reloadButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                reload();
+            }
+        });
+        infoPanel.add(reloadButton);
 
+
+        newHiveButton = new JButton("add new Hive");
+        newHiveButton.setBackground(Color.WHITE);
+        newHiveButton.setFocusPainted(false);
+        newHiveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                fc.addHives(currentFarm);
+            }
+        });
+        infoPanel.add(newHiveButton);
+
+
+        loadFarm = new JButton("load farm");
+        loadFarm.setBackground(Color.WHITE);
+        loadFarm.setFocusPainted(false);
+        loadFarm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                currentFarm = rj.loadFarm();
+            }
+        });
+        infoPanel.add(loadFarm);
+
+        saveFarm = new JButton("save farm");
+        saveFarm.setBackground(Color.WHITE);
+        saveFarm.setFocusPainted(false);
+        saveFarm.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                wj.saveFarm(currentFarm);
+            }
+        });
+        infoPanel.add(saveFarm);
 
 
         centerPanel.add(infoPanel);
-
-
 
         //center panel
         //======================================================================================
@@ -281,6 +318,8 @@ public class beeCareUI {
         beeEventTA.setForeground(Color.green);
         beeEventTA.setEditable(false);
 
+        beeEventTA.setText(rj.hivesInfo(currentFarm));
+
         JScrollPane eventLog = new JScrollPane(beeEventTA);
         mainPanel.add(eventLog);
 
@@ -288,9 +327,13 @@ public class beeCareUI {
         mainBeeCareFrame.add(mainPanel);
         mainBeeCareFrame.setVisible(true);
 
+    }
+    public void reload(){
+        mainBeeCareFrame.setVisible(false);
+        farmControlWindow();
+    }
 
-
-
-
+    public Farm getCurrentFarm(){
+        return currentFarm;
     }
 }

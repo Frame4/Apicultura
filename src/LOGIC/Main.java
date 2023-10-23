@@ -17,25 +17,28 @@ public class Main extends Thread{
     weather weather = LOGIC.weather.getInstance();
     lightsControl lc = lightsControl.getInstance();
     smokeControl sc = smokeControl.getInstance();
-    public Farm testFarm = fc.createFarm();//Granja de pruebas. Será reemplazada por un json donde se cargaran o se guardaran nuevas
+    readJSON rj = new readJSON();
+
+
+    public Farm mainFarm = fc.createFarm();//es la granja que será usada alrededor de tod0 el programa, ya sea cargada o nueva.
 
     public static void main(String[] args)  {
         Main thread = new Main();
         thread.start();
-        beeCareUI wUI = new beeCareUI();
-        wUI.weatherJPanel();
+        beeCareUI bcUI = new beeCareUI();
+        bcUI.farmControlWindow();
     }
+    Runnable a = () -> {
+        weatherControl wC = new weatherControl();
+        wC.weatherRandomizer();
 
-    public void pruebas(){
-        testFarm = fc.addHives(testFarm);
-        testFarm = fc.addHives(testFarm);
-        testFarm = fc.addHives(testFarm);
+        fc.controlConformityLevel(mainFarm,weather.getTemperature(),sc.isSmokeInRoom(),lc.getPower());
+        displayInfo();
+    };
+    public void run(){
+        scheduler.scheduleAtFixedRate(a, 0, 5, TimeUnit.SECONDS);
     }
-
     public void displayInfo(){//información temporal. Será reemplazada en interfaz gráfica.
-
-
-
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println("=====================================");
@@ -45,25 +48,10 @@ public class Main extends Thread{
         System.out.println("    lights power: " + lc.getPower());
         System.out.println("    smoke in room: " + sc.isSmokeInRoom());
         System.out.println("-------------------------------------");
-        System.out.println("    conformity level: " + testFarm.getConformity());
-        System.out.println("    honey pots harvested: " + testFarm.getHoneyPotsProduced());
-
-    }
-
-    Runnable a = () -> {
-        weatherControl wC = new weatherControl();
-        wC.weatherRandomizer();
-        fc.controlConformityLevel(testFarm,weather.getTemperature(),sc.isSmokeInRoom(),lc.getPower());
-        displayInfo();
-
-    };
-    public void run(){
-
-        scheduler.scheduleAtFixedRate(a, 0, 10, TimeUnit.SECONDS);
-
+        System.out.println("    conformity level: " + mainFarm.getConformity());
+        System.out.println("    honey pots harvested: " + mainFarm.getHoneyPotsProduced());
     }
 }
-
 /*
     Control según el clima: Las abejas son sensibles a los cambios climáticos, por lo que una de las funciones se encargará de encender calentadores,
     aires acondicionados, luces, entre otras cosas. Recibe el clima y la temperatura actual, retorna alguna de las funciones mencionadas.
@@ -74,6 +62,6 @@ public class Main extends Thread{
 	Estrategia: Para esta entrega tengo pensado terminar los controladores del aire acondicionado, luces y el humo, indispensables para el cuidado de las abejas en un entorno cerrado,
 	además de la función que se encarga de crear las granjas, las cuales consisten de n cantidad de colmenas. La información de la granja se almacenará en el json, el cual está pensado
 	para la entrega final, junto con los detalles finales de la interfaz gráfica. Por el momento se trabajará mayoritariamente en terminal. Adicionalmente,
-	se implementará el singleton pattern a las clases de control, pues es necesario que solo exista una instancia de las mismas para todo el programa.
+	se implementará el singleton pattern a las clases de control, pues es necesario que solo exista una instancia de las mismas para tod0 el programa.
 
  */

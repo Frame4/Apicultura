@@ -1,4 +1,10 @@
 package GUI;
+
+
+import CONTROL.farmControl;
+import LOGIC.Main;
+import LOGIC.readJSON;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,9 +16,17 @@ import java.awt.event.ActionListener;
 
 public class beeMenuUI {
     beeCareUI wUI = new beeCareUI();
+    Main main = new Main();
+    readJSON rj = new readJSON();
+    farmControl fc = new farmControl();
+
+
+
+
     JFrame mainMenuFrame;
     JPanel mainMenuPanel;
-    JButton continueButton, loadButton, configButton, exitButton;
+    JButton newFarmButton, loadFarmButton, configButton, exitButton;
+
     beeCareUI bcUI = new beeCareUI();
 
     public void beeMenu(){
@@ -24,29 +38,30 @@ public class beeMenuUI {
         mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         //continuar
-        continueButton = new JButton("Continue");
-        continueButton.setBounds(175, 250, 150, 30);
-        continueButton.setBackground(Color.WHITE);
-        continueButton.addActionListener(new ActionListener() {
+        newFarmButton = new JButton("New Farm");
+        newFarmButton.setBounds(175, 250, 150, 30);
+        newFarmButton.setBackground(Color.WHITE);
+        newFarmButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
 
+                mainMenuFrame.setVisible(false);
             }
         });
-        mainMenuPanel.add(continueButton);
+        mainMenuPanel.add(newFarmButton);
 
         //cargar granja de abejas
-        loadButton = new JButton("Load farm");
-        loadButton.setBounds(175, 300, 150, 30);
-        loadButton.setBackground(Color.WHITE);
-        loadButton.setFocusPainted(false);
-        loadButton.addActionListener(new ActionListener() {
+        loadFarmButton = new JButton("Load farm");
+        loadFarmButton.setBounds(175, 300, 150, 30);
+        loadFarmButton.setBackground(Color.WHITE);
+        loadFarmButton.setFocusPainted(false);
+        loadFarmButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
+                readJSON rj = new readJSON();
 
-
+                mainMenuFrame.setVisible(false);
             }
         });
-        mainMenuPanel.add(loadButton);
-
+        mainMenuPanel.add(loadFarmButton);
 
         //configuración
         configButton = new JButton("Config");
@@ -55,11 +70,10 @@ public class beeMenuUI {
         configButton.setFocusPainted(false);
         configButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
-
+                rj.openFile("src/JSON_files/config.JSON");
             }
         });
         mainMenuPanel.add(configButton);
-
 
         //salir
         exitButton = new JButton("Exit");

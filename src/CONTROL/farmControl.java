@@ -5,6 +5,7 @@ import LOGIC.Hive;
 import LOGIC.readJSON;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class farmControl  {
@@ -30,9 +31,26 @@ public class farmControl  {
     }
     public Farm addHives(Farm farm){
         ArrayList<Hive> hives = farm.getHives();
-        hives.add(new Hive(1,random.nextInt(maxBeeAdding - minBeeAdding) + minBeeAdding));
+
+        hives.add(new Hive(getLastHiveCode(farm)+1,random.nextInt(maxBeeAdding - minBeeAdding) + minBeeAdding));
         farm.setHives(hives);
         return farm;
+    }
+
+    public int getLastHiveCode(Farm farm){
+        ArrayList<Hive> hives = farm.getHives();
+        ArrayList<Integer> codes = new ArrayList<Integer>();
+        for(Hive hive : hives){
+            codes.add(hive.getCode());
+        }
+
+        return findMax(codes);
+    }
+    public static Integer findMax(ArrayList<Integer> list) {
+        if (list.isEmpty()) {
+            return 0;
+        }
+        return Collections.max(list);
     }
 
     public Hive killBees(Hive hive){
@@ -120,5 +138,4 @@ public class farmControl  {
         }
         farm.setHives(hives);
     }
-
 }
